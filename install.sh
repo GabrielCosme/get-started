@@ -20,7 +20,7 @@ MODULES=(
     "shell:10-shell.sh:zsh, oh-my-zsh, starship, zoxide, mise, eza, Nerd Font"
     "cpp:20-cpp.sh:gcc, cmake, ninja, gdb, doxygen, LLVM/clang ${CLANG_VERSION:-22}"
     "embedded:30-embedded.sh:arm-none-eabi toolchain, gdb-multiarch, usb groups"
-    "python:40-python.sh:python3, pipx -> poetry, ruff, uv"
+    "python:40-python.sh:python3, pipx -> ruff, uv, tldr"
     "rust:50-rust.sh:rustup with rust-analyzer, clippy, rustfmt"
     "docker:60-docker.sh:Docker CE, buildx, compose"
     "github:70-github.sh:gh CLI, git identity, ssh key"

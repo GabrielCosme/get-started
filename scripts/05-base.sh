@@ -13,7 +13,7 @@ log "apt front-ends"
 apt_install nala aptitude ppa-purge
 
 log "CLI utilities"
-apt_install fzf bat tldr neofetch w3m command-not-found
+apt_install fzf bat w3m command-not-found
 
 # Ubuntu ships bat as `batcat` to avoid a name clash. Restore the usual name.
 # (The zsh-bat plugin aliases `cat` -> `batcat`; this is separate, and gives a

@@ -53,7 +53,7 @@ else
 fi
 
 section "base tools"
-for c in nala aptitude fzf tldr neofetch croc w3m; do check_cmd "$c"; done
+for c in nala aptitude fzf croc w3m; do check_cmd "$c"; done
 have bat && ok "$(printf '%-18s %s' bat "$(bat --version 2>/dev/null | head -1)")" \
          || { have batcat && meh "only 'batcat' exists; ~/.local/bin/bat symlink missing" || bad "bat/batcat missing"; }
 
@@ -92,7 +92,7 @@ check_group plugdev
 
 section "python"
 check_cmd python3
-for c in pipx poetry ruff uv; do check_cmd "$c"; done
+for c in pipx ruff uv tldr; do check_cmd "$c"; done
 
 section "rust"
 for c in rustc cargo rustup; do check_cmd "$c"; done

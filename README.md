@@ -28,11 +28,11 @@ CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 |---|---|
 | `sudo` | passwordless sudo via `/etc/sudoers.d/`, validated with `visudo -c` before install |
 | `locale` | timezone `America/Sao_Paulo`, generates `en_US.UTF-8` (+ `pt_BR.UTF-8`) and sets `LANG` |
-| `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `tldr`, `neofetch`, `w3m`, `croc`, `command-not-found`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
+| `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `w3m`, `croc`, `command-not-found`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
 | `shell` | `zsh` + oh-my-zsh, cloned plugins (`fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-bat`), built-in plugins (`command-not-found`, `extract`, `sudo`, `web-search`), `starship`, `zoxide`, `mise` (node = latest), `eza`, FiraCode Nerd Font |
 | `cpp` | `build-essential`, `cmake`, `ninja-build` (`.zshrc` sets `CMAKE_GENERATOR=Ninja`), `gdb`, `doxygen`, `graphviz`, **LLVM/clang 22** from `apt.llvm.org` (`clang`, `clangd`, `clang-format`, `clang-tidy`, `lld`, `lldb`) wired to the unversioned names via `update-alternatives`, `~/.config/clangd/config.yaml` |
 | `embedded` | `gcc-arm-none-eabi`, `binutils-arm-none-eabi`, `libnewlib-arm-none-eabi`, `libstdc++-arm-none-eabi-newlib`, `gdb-multiarch`, `openocd`, `stlink-tools`, `dfu-util`, `dialout`+`plugdev` groups |
-| `python` | `python3-*`, `virtualenv`, `pipx` → `poetry`, `ruff`, `uv` |
+| `python` | `python3-*`, `virtualenv`, `pipx` → `ruff`, `uv`, `tldr` |
 | `rust` | `rustup` + `rust-analyzer`, `clippy`, `rustfmt` |
 | `docker` | Docker CE, CLI, containerd, buildx, compose; `docker` group; service enabled |
 | `github` | `gh` CLI, `gh co` alias, HTTPS protocol, ed25519 key generated **and registered on GitHub** via `gh ssh-key add`, then verified |
