@@ -4,7 +4,7 @@
 # Exit status is non-zero if any check failed.
 #
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
-set +e  # a failing check must report, not abort
+set +e +o pipefail  # a failing check must report, not abort
 
 CLANG_VERSION="${CLANG_VERSION:-22}"
 PASS=0; FAIL=0; WARN=0
@@ -109,7 +109,11 @@ section "github"
 check_cmd gh
 gh auth status >/dev/null 2>&1 && ok "gh authenticated as $(gh api user --jq .login 2>/dev/null)" || bad "gh not authenticated"
 check_file "$HOME/.ssh/id_ed25519"
-if ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@github.com 2>&1 | grep -q 'successfully authenticated'; then
+# github always exits 1 here ("does not provide shell access"), so the banner has
+# to be captured and matched separately -- piping into grep would report failure
+# under the `pipefail` inherited from lib.sh.
+ssh_banner="$(ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@github.com 2>&1)"
+if printf '%s' "$ssh_banner" | grep -q 'successfully authenticated'; then
     ok "SSH key authenticates to github.com"
 else
     bad "SSH key does not authenticate to github.com"
