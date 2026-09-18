@@ -18,21 +18,24 @@ is copied to `~/.get-started-backup/<timestamp>/` first.
 ./install.sh                      # everything
 ./install.sh --list               # show modules
 ./install.sh --skip latex         # everything but TeX Live
+./install.sh --skip sudo          # keep the sudo password prompt
 ./install.sh --only shell,dotfiles
+CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 ```
 
 ## Modules
 
 | Module | Contents |
 |---|---|
+| `sudo` | passwordless sudo via `/etc/sudoers.d/`, validated with `visudo -c` before install |
 | `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `tldr`, `neofetch`, `w3m`, `croc`, `command-not-found`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
 | `shell` | `zsh` + oh-my-zsh, cloned plugins (`fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-bat`), built-in plugins (`command-not-found`, `extract`, `sudo`, `web-search`), `starship`, `zoxide`, `mise` (node = latest), `eza`, FiraCode Nerd Font |
-| `cpp` | `build-essential`, `clang`/`clangd`/`clang-format`/`clang-tidy`, `cmake`, `ninja-build` (`.zshrc` sets `CMAKE_GENERATOR=Ninja`), `gdb`, `doxygen`, `graphviz`, `~/.config/clangd/config.yaml` |
-| `embedded` | `gcc-arm-none-eabi`, `gdb-multiarch`, newlib, `dialout`+`plugdev` groups |
+| `cpp` | `build-essential`, `cmake`, `ninja-build` (`.zshrc` sets `CMAKE_GENERATOR=Ninja`), `gdb`, `doxygen`, `graphviz`, **LLVM/clang 22** from `apt.llvm.org` (`clang`, `clangd`, `clang-format`, `clang-tidy`, `lld`, `lldb`) wired to the unversioned names via `update-alternatives`, `~/.config/clangd/config.yaml` |
+| `embedded` | `gcc-arm-none-eabi`, `binutils-arm-none-eabi`, `libnewlib-arm-none-eabi`, `libstdc++-arm-none-eabi-newlib`, `gdb-multiarch`, `openocd`, `stlink-tools`, `dfu-util`, `dialout`+`plugdev` groups |
 | `python` | `python3-*`, `virtualenv`, `pipx` → `poetry`, `ruff`, `uv` |
 | `rust` | `rustup` + `rust-analyzer`, `clippy`, `rustfmt` |
 | `docker` | Docker CE, CLI, containerd, buildx, compose; `docker` group; service enabled |
-| `github` | `gh` CLI, `gh co` alias, HTTPS protocol, ed25519 key generation |
+| `github` | `gh` CLI, `gh co` alias, HTTPS protocol, ed25519 key generated **and registered on GitHub** via `gh ssh-key add`, then verified |
 | `latex` | `texlive-latex-extra`, `texlive-fonts-extra` (~2 GB) |
 | `claude` | Claude Code CLI, `settings.json`, `statusline.py`, `CLAUDE.md` |
 | `vscode` | 45 extensions from `vscode-extensions.txt`, Machine `settings.json` |
@@ -52,6 +55,13 @@ These were on the old machine but were left out on purpose:
 To bring any of these back, add a module under `scripts/` and register it in the
 `MODULES` array in `install.sh`.
 
+## Passwordless sudo
+
+The `sudo` module writes `/etc/sudoers.d/99-<user>-nopasswd`, validated with
+`visudo -c` before it is installed — an invalid sudoers file would otherwise lock
+you out of `sudo` entirely. Any process running as you can then become root with
+no prompt, which is the trade-off. Skip it with `./install.sh --skip sudo`.
+
 ## Secrets — not in this repo
 
 - `~/.ssh/id_ed25519` — the `github` module generates a fresh key per machine.
@@ -68,6 +78,11 @@ To bring any of these back, add a module under `scripts/` and register it in the
   (the real one stays available as `rcat`) and routes man pages through it; the
   `base` module additionally symlinks `~/.local/bin/bat` so a plain `bat` command
   works in bash and in non-interactive shells.
+- **clang 22** comes from `apt.llvm.org`. The module probes for a pocket matching
+  the release codename and falls back to `noble` if LLVM has not published one
+  yet. `clang-format` output changes between major versions, so re-running
+  `make format` on a project last formatted with clang-format 18 will produce a
+  diff — expect one commit of churn per project.
 - **`gcc-arm-none-eabi`** tracks the Ubuntu archive, so its version moves with the
   release (24.04 shipped 13.2.rel1). Pin it manually from the Arm Developer site
   if a firmware project requires a specific toolchain.

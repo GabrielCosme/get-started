@@ -36,6 +36,17 @@ else
     curl -fsSL https://starship.rs/install.sh | sudo sh -s -- --yes
 fi
 
+# starship works with no config file at all, so only install one if the repo
+# actually carries it. Drop a starship.toml into dotfiles/ and it is picked up.
+if [ -f "$REPO_DIR/dotfiles/starship.toml" ]; then
+    mkdir -p "$HOME/.config"
+    backup "$HOME/.config/starship.toml"
+    cp "$REPO_DIR/dotfiles/starship.toml" "$HOME/.config/starship.toml"
+    info "installed ~/.config/starship.toml"
+else
+    info "no dotfiles/starship.toml in the repo - starship will use its defaults"
+fi
+
 log "zoxide"
 if have zoxide; then
     info "zoxide already installed"
