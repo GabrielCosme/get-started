@@ -9,6 +9,10 @@ plugins=(
     fzf-tab
     fast-syntax-highlighting
     zsh-autosuggestions
+    zsh-bat
+    command-not-found
+    extract
+    sudo
     web-search
 )
 
@@ -18,6 +22,7 @@ source $ZSH/oh-my-zsh.sh
 
 export OPENOCD_SCRIPTS_PATH="C:/Users/$WIN_USER/openocd/openocd/scripts"
 export PATH="$PATH:$HOME/.local/bin"
+export CMAKE_GENERATOR="Ninja"
 
 # --- WSL <-> Windows interop -------------------------------------------------
 alias cube="/mnt/c/Users/$WIN_USER/AppData/Local/Programs/STM32CubeMX/STM32CubeMX.exe"
@@ -29,7 +34,10 @@ alias cp_path="pwd | clip.exe"
 alias add="sudo nala install -y"
 alias update="sudo nala upgrade -y; sudo nala autoremove; sudo nala clean"
 alias ls="eza --icons --color=always"
-alias build="cmake -B build && make -j -C build --no-print-directory"
+alias configure="cmake -B build"
+alias build="cmake --build build"
+alias fzfp='fzf --preview "batcat --color=always {}" --preview-window "~3"'
+alias cd..="cd .."
 
 function clear_local() {
     git fetch --prune

@@ -13,9 +13,11 @@ log "apt front-ends"
 apt_install nala aptitude ppa-purge
 
 log "CLI utilities"
-apt_install fzf bat tldr neofetch w3m
+apt_install fzf bat tldr neofetch w3m command-not-found
 
 # Ubuntu ships bat as `batcat` to avoid a name clash. Restore the usual name.
+# (The zsh-bat plugin aliases `cat` -> `batcat`; this is separate, and gives a
+#  real `bat` binary that also works in bash and in non-interactive shells.)
 if have batcat && ! have bat; then
     mkdir -p "$HOME/.local/bin"
     ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"

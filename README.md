@@ -25,9 +25,9 @@ is copied to `~/.get-started-backup/<timestamp>/` first.
 
 | Module | Contents |
 |---|---|
-| `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `tldr`, `neofetch`, `w3m`, `croc`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
-| `shell` | `zsh` + oh-my-zsh, plugins (`fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`), `starship`, `zoxide`, `mise` (node = latest), `eza`, FiraCode Nerd Font |
-| `cpp` | `build-essential`, `clang`/`clangd`/`clang-format`/`clang-tidy`, `cmake`, `ninja-build`, `gdb`, `doxygen`, `graphviz`, `~/.config/clangd/config.yaml` |
+| `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `tldr`, `neofetch`, `w3m`, `croc`, `command-not-found`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
+| `shell` | `zsh` + oh-my-zsh, cloned plugins (`fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-bat`), built-in plugins (`command-not-found`, `extract`, `sudo`, `web-search`), `starship`, `zoxide`, `mise` (node = latest), `eza`, FiraCode Nerd Font |
+| `cpp` | `build-essential`, `clang`/`clangd`/`clang-format`/`clang-tidy`, `cmake`, `ninja-build` (`.zshrc` sets `CMAKE_GENERATOR=Ninja`), `gdb`, `doxygen`, `graphviz`, `~/.config/clangd/config.yaml` |
 | `embedded` | `gcc-arm-none-eabi`, `gdb-multiarch`, newlib, `dialout`+`plugdev` groups |
 | `python` | `python3-*`, `virtualenv`, `pipx` → `poetry`, `ruff`, `uv` |
 | `rust` | `rustup` + `rust-analyzer`, `clippy`, `rustfmt` |
@@ -64,6 +64,10 @@ To bring any of these back, add a module under `scripts/` and register it in the
   `./install.sh --only docker` once the real pocket exists.
 - **`eza`** is installed from the Ubuntu archive when available, and from
   `deb.gierens.de` otherwise.
+- **`bat`** is `batcat` on Ubuntu. The `zsh-bat` plugin aliases `cat` -> `batcat`
+  (the real one stays available as `rcat`) and routes man pages through it; the
+  `base` module additionally symlinks `~/.local/bin/bat` so a plain `bat` command
+  works in bash and in non-interactive shells.
 - **`gcc-arm-none-eabi`** tracks the Ubuntu archive, so its version moves with the
   release (24.04 shipped 13.2.rel1). Pin it manually from the Arm Developer site
   if a firmware project requires a specific toolchain.

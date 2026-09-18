@@ -26,6 +26,8 @@ ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 clone_or_pull https://github.com/Aloxaf/fzf-tab.git                  "$ZSH_CUSTOM/plugins/fzf-tab"
 clone_or_pull https://github.com/zdharma-continuum/fast-syntax-highlighting.git "$ZSH_CUSTOM/plugins/fast-syntax-highlighting"
 clone_or_pull https://github.com/zsh-users/zsh-autosuggestions.git   "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+clone_or_pull https://github.com/fdellwing/zsh-bat.git              "$ZSH_CUSTOM/plugins/zsh-bat"
+# command-not-found, extract and sudo are oh-my-zsh built-ins; nothing to clone.
 
 log "starship prompt"
 if have starship; then
