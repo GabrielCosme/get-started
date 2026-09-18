@@ -43,9 +43,16 @@ alias add="sudo nala install -y"
 alias update="sudo nala upgrade -y; sudo nala autoremove; sudo nala clean"
 alias ls="eza --icons --color=always"
 alias configure="cmake -B build"
-alias build="cmake --build build"
 alias fzfp='fzf --preview "batcat --color=always {}" --preview-window "~3"'
 alias cd..="cd .."
+
+function build() {
+    if [ $# -eq 0 ]; then
+        cmake --build build
+    else
+        cmake --build build --target "$@"
+    fi
+}
 
 function clear_local() {
     git fetch --prune
@@ -57,7 +64,6 @@ function take() {
     cd "$1"
 }
 
-# Abre o repositório remoto na branch atual no navegador
 function open_remote() {
     origin_url=$(git remote get-url origin)
     repo_url=$(echo "$origin_url" | grep -o 'github\.com[:/].*\.git' | sed 's/github\.com[:/]\(.*\)\.git/\1/')
