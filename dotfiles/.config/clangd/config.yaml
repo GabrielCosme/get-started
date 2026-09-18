@@ -1,0 +1,9 @@
+InlayHints:
+  Designators: No
+  Enabled: Yes
+  ParameterNames: No
+  DeducedTypes: Yes
+Diagnostics:
+  Suppress: 'pp_including_mainfile_in_preamble'
+  Includes:
+    IgnoreHeader: [".*cpp"]

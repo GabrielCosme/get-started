@@ -1,0 +1,30 @@
+{
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "\"JetBrains Mono\", \"FiraCode Nerd Font\"",
+    "editor.defaultFormatter": "xaver.clang-format",
+    "notebook.defaultFormatter": "charliermarsh.ruff",
+    "cmake.automaticReconfigure": false,
+    "cortex-debug.openocdPath": "openocd.exe",
+    "git.autoStash": true,
+    "cortex-debug.enableTelemetry": false,
+    "cmake.configureOnEdit": false,
+    "cmake.configureOnOpen": false,
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.intelliSenseMode": "gcc-arm",
+    "editor.formatOnSave": true,
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.autoAddFileAssociations": false,
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build/",
+        "--header-insertion=never",
+        "--pretty"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "notebook.formatOnSave.enabled": true
+}
