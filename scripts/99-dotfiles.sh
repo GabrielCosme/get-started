@@ -4,7 +4,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 
 log "Dotfiles"
 
-for f in .zshrc .zshenv .gitconfig; do
+for f in .zshrc .zshenv .gitconfig .gitignore_global; do
     backup "$HOME/$f"
     cp "$REPO_DIR/dotfiles/$f" "$HOME/$f"
     info "installed ~/$f"

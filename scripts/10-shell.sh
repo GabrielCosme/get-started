@@ -100,7 +100,5 @@ else
     info "installed FiraCode Nerd Font Mono"
 fi
 
-if is_wsl; then
-    warn "On WSL the font must ALSO be installed on Windows for Windows Terminal to render it."
-    warn "Download FiraCode from https://github.com/ryanoasis/nerd-fonts/releases and install it there."
-fi
+# Note: under WSL this font is only used by Linux programs that render text
+# themselves. Windows Terminal and the VS Code UI use whatever Windows has.

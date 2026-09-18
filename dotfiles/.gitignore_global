@@ -1,0 +1,29 @@
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*:Zone.Identifier
+
+# Build output
+build/
+.cache/
+compile_commands.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Direnv / local env
+.env.local
+.direnv/

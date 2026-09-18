@@ -15,6 +15,7 @@ source "$REPO_DIR/lib.sh"
 # Order matters: base sets up apt, shell sets up PATH, dotfiles goes last.
 MODULES=(
     "sudo:00-sudo.sh:passwordless sudo for this user"
+    "locale:02-locale.sh:timezone and UTF-8 locale"
     "base:05-base.sh:apt front-ends, core CLI tools, WSL integration"
     "shell:10-shell.sh:zsh, oh-my-zsh, starship, zoxide, mise, eza, Nerd Font"
     "cpp:20-cpp.sh:gcc, cmake, ninja, gdb, doxygen, LLVM/clang ${CLANG_VERSION:-22}"

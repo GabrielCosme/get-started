@@ -28,6 +28,7 @@ CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 | Module | Contents |
 |---|---|
 | `sudo` | passwordless sudo via `/etc/sudoers.d/`, validated with `visudo -c` before install |
+| `locale` | timezone `America/Sao_Paulo`, generates `en_US.UTF-8` (+ `pt_BR.UTF-8`) and sets `LANG` |
 | `base` | `nala`, `aptitude`, `ppa-purge`, `fzf`, `bat`, `tldr`, `neofetch`, `w3m`, `croc`, `command-not-found`, `net-tools`, `ubuntu-wsl`, `/etc/wsl.conf` with systemd |
 | `shell` | `zsh` + oh-my-zsh, cloned plugins (`fzf-tab`, `fast-syntax-highlighting`, `zsh-autosuggestions`, `zsh-bat`), built-in plugins (`command-not-found`, `extract`, `sudo`, `web-search`), `starship`, `zoxide`, `mise` (node = latest), `eza`, FiraCode Nerd Font |
 | `cpp` | `build-essential`, `cmake`, `ninja-build` (`.zshrc` sets `CMAKE_GENERATOR=Ninja`), `gdb`, `doxygen`, `graphviz`, **LLVM/clang 22** from `apt.llvm.org` (`clang`, `clangd`, `clang-format`, `clang-tidy`, `lld`, `lldb`) wired to the unversioned names via `update-alternatives`, `~/.config/clangd/config.yaml` |
@@ -39,7 +40,38 @@ CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 | `latex` | `texlive-latex-extra`, `texlive-fonts-extra` (~2 GB) |
 | `claude` | Claude Code CLI, `settings.json`, `statusline.py`, `CLAUDE.md` |
 | `vscode` | 45 extensions from `vscode-extensions.txt`, Machine `settings.json` |
-| `dotfiles` | `.zshrc`, `.zshenv`, `.gitconfig`, clangd config |
+| `dotfiles` | `.zshrc`, `.zshenv`, `.gitconfig`, `.gitignore_global`, clangd config |
+
+## Checking the result
+
+```bash
+./doctor.sh     # read-only; exits non-zero if anything is missing
+```
+
+Verifies every module's deliverables — versions, group membership, the sudoers
+drop-in, cloned zsh plugins, clang major version, `run-clang-tidy` on `PATH`,
+docker reachability, SSH authentication to GitHub, and the git settings below.
+
+## Git configuration
+
+`dotfiles/.gitconfig` carries more than identity. The notable settings:
+
+| Setting | Effect |
+|---|---|
+| `push.autoSetupRemote` | `git push` on a new branch just works, no `--set-upstream` |
+| `pull.rebase` | rebase instead of creating merge bubbles |
+| `fetch.prune` | delete refs for branches gone from the remote |
+| `rebase.autoStash` | rebase with a dirty tree instead of refusing |
+| `merge.conflictStyle = zdiff3` | conflicts show the common ancestor, not just the two sides |
+| `rerere.enabled` | remember a conflict resolution and replay it |
+| `diff.algorithm = histogram` | noticeably better diffs than the default |
+| `core.autocrlf = input` | normalise CRLF on commit, never on checkout |
+| `branch.sort = -committerdate` | `git branch` lists most recent first |
+| `core.excludesfile` | points at `~/.gitignore_global` |
+
+These live in the dotfile rather than in a module that runs `git config --global`,
+because the `dotfiles` module runs last and would overwrite anything such a
+module had written.
 
 ## Deliberately not included
 
@@ -93,8 +125,8 @@ no prompt, which is the trade-off. Skip it with `./install.sh --skip sudo`.
 2. `wsl --shutdown` from Windows — group membership (`docker`, `dialout`,
    `plugdev`) and systemd only take effect after a full restart.
 3. `gh auth login` and `claude` to authenticate.
-4. Install FiraCode Nerd Font **on Windows** as well, then select it in Windows
-   Terminal — the Linux-side font does not affect the terminal's rendering.
+4. Nothing on the Windows side is managed here — Windows Terminal and the
+   VS Code UI use fonts installed on Windows, which is a one-time manual step.
 5. If VS Code extensions were skipped, connect VS Code to WSL once and re-run
    `./install.sh --only vscode`.
 
