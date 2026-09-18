@@ -1,7 +1,6 @@
 # get-started
 
-Bootstrap script for a fresh **Ubuntu on WSL2** machine, rebuilt from the setup
-captured on `DESKTOP-392HJ56` (Ubuntu 24.04.5) in September 2026.
+Bootstrap script for a fresh **Ubuntu on WSL2** machine.
 
 ```bash
 git clone https://github.com/GabrielCosme/get-started.git
@@ -40,7 +39,7 @@ CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 | `latex` | `texlive-latex-extra`, `texlive-fonts-extra` (~2 GB) |
 | `claude` | Claude Code CLI, `settings.json`, `statusline.py`, `CLAUDE.md` |
 | `vscode` | 45 extensions from `vscode-extensions.txt`, Machine `settings.json` |
-| `dotfiles` | `.zshrc`, `.zshenv`, `.gitconfig`, `.gitignore_global`, clangd config |
+| `dotfiles` | `.zshrc`, `.zshenv`, `.gitconfig`, `.gitignore_global`, clangd config, generated `~/.config/wsl-env.zsh` |
 
 ## Checking the result
 
@@ -51,6 +50,26 @@ CLANG_VERSION=21 ./install.sh --only cpp   # pin a different LLVM release
 Verifies every module's deliverables — versions, group membership, the sudoers
 drop-in, cloned zsh plugins, clang major version, `run-clang-tidy` on `PATH`,
 docker reachability, SSH authentication to GitHub, and the git settings below.
+
+## WSL interop paths
+
+The `cube` and `cmonitor` aliases and `OPENOCD_SCRIPTS_PATH` point into the
+Windows user profile, whose name differs per machine. Rather than hardcode it,
+the `dotfiles` module detects it at install time and writes:
+
+```sh
+# ~/.config/wsl-env.zsh
+export WIN_USER="<detected>"
+export WIN_HOME="/mnt/c/Users/<detected>"
+```
+
+`.zshrc` sources that file if it exists and defines the Windows-facing aliases
+inside the guard, so on a non-WSL machine the block is simply skipped.
+
+Detection tries `cmd.exe` (~65 ms), then `powershell.exe` (~350 ms), then falls
+back to the single non-system profile under `/mnt/c/Users`. It runs **once, in
+the installer** — shell startup only does a file test and a `source`, never a
+subprocess. Re-run it with `./install.sh --only dotfiles`.
 
 ## Git configuration
 
@@ -72,20 +91,6 @@ docker reachability, SSH authentication to GitHub, and the git settings below.
 These live in the dotfile rather than in a module that runs `git config --global`,
 because the `dotfiles` module runs last and would overwrite anything such a
 module had written.
-
-## Deliberately not included
-
-These were on the old machine but were left out on purpose:
-
-- **ROS 2 Jazzy, `ros-dev-tools`, Gazebo `gz-harmonic`, the `ros2-env` zsh plugin.**
-  Jazzy is pinned to 24.04 and will not install on a newer release.
-- **CUDA toolkit 12.9, Nsight Systems/Compute.**
-- **Graphics stack**: oibaf PPA, mesa dev packages, LunarG `vulkan-sdk`, `xorg`,
-  `xpra`, `mesaflash`, `vainfo`, and MuJoCo under `~/.mujoco`.
-- **Codex and GitHub Copilot CLI**, and the `openai.chatgpt` VS Code extension.
-
-To bring any of these back, add a module under `scripts/` and register it in the
-`MODULES` array in `install.sh`.
 
 ## Passwordless sudo
 

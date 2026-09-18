@@ -70,3 +70,31 @@ backup() {
     cp -a "$target" "$dest/${target#"$HOME"/}"
     info "backed up $target -> $dest/${target#"$HOME"/}"
 }
+
+# Best-effort detection of the Windows user name from inside WSL.
+# Echoes the name on success; returns 1 if it cannot be determined.
+detect_win_user() {
+    is_wsl || return 1
+    local u="" candidates
+
+    # cmd.exe is the cheapest (~65ms). It warns about the UNC cwd on stderr,
+    # which is harmless; /D skips any AutoRun command.
+    if have cmd.exe; then
+        u="$(cmd.exe /D /C 'echo %USERNAME%' 2>/dev/null | tr -d '\r\n')"
+    fi
+
+    # Slower (~350ms) but works if cmd.exe is unavailable.
+    if [ -z "$u" ] && have powershell.exe; then
+        u="$(powershell.exe -NoProfile -Command '$env:USERNAME' 2>/dev/null | tr -d '\r\n')"
+    fi
+
+    # Last resort, only trusted when exactly one real profile exists.
+    if [ -z "$u" ] && [ -d /mnt/c/Users ]; then
+        candidates="$(/bin/ls -1 /mnt/c/Users 2>/dev/null \
+            | grep -viE '^(public|default|default user|all users|desktop\.ini)$' || true)"
+        [ "$(printf '%s\n' "$candidates" | grep -c .)" -eq 1 ] && u="$candidates"
+    fi
+
+    [ -n "$u" ] && [ -d "/mnt/c/Users/$u" ] || return 1
+    printf '%s\n' "$u"
+}

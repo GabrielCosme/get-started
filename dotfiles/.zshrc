@@ -20,15 +20,23 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export OPENOCD_SCRIPTS_PATH="C:/Users/$WIN_USER/openocd/openocd/scripts"
 export PATH="$PATH:$HOME/.local/bin"
 export CMAKE_GENERATOR="Ninja"
 
 # --- WSL <-> Windows interop -------------------------------------------------
-alias cube="/mnt/c/Users/$WIN_USER/AppData/Local/Programs/STM32CubeMX/STM32CubeMX.exe"
-alias cmonitor="/mnt/c/Users/$WIN_USER/AppData/Local/STM32CubeMonitor/STM32CubeMonitor.exe"
-alias open="cmd.exe /C start"
-alias cp_path="pwd | clip.exe"
+# ~/.config/wsl-env.zsh exports WIN_USER and WIN_HOME. The installer writes it
+# once (scripts/99-dotfiles.sh); nothing is detected at shell start, so this
+# costs one file test and a source - no subprocess.
+if [ -f "$HOME/.config/wsl-env.zsh" ]; then
+    source "$HOME/.config/wsl-env.zsh"
+
+    export OPENOCD_SCRIPTS_PATH="C:/Users/$WIN_USER/openocd/openocd/scripts"
+
+    alias cube="$WIN_HOME/AppData/Local/Programs/STM32CubeMX/STM32CubeMX.exe"
+    alias cmonitor="$WIN_HOME/AppData/Local/STM32CubeMonitor/STM32CubeMonitor.exe"
+    alias open="cmd.exe /C start"
+    alias cp_path="pwd | clip.exe"
+fi
 
 # --- general aliases ---------------------------------------------------------
 alias add="sudo nala install -y"

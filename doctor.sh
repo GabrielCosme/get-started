@@ -136,6 +136,14 @@ check_file "$HOME/.vscode-server/data/Machine/settings.json"
 section "dotfiles"
 for f in .zshrc .zshenv .gitconfig .gitignore_global; do check_file "$HOME/$f"; done
 check_file "$HOME/.config/clangd/config.yaml"
+if is_wsl; then
+    if [ -f "$HOME/.config/wsl-env.zsh" ] && grep -q '^export WIN_HOME=' "$HOME/.config/wsl-env.zsh"; then
+        wh="$(. "$HOME/.config/wsl-env.zsh" 2>/dev/null && echo "$WIN_HOME")"
+        [ -d "$wh" ] && ok "wsl-env.zsh -> WIN_HOME=$wh" || bad "wsl-env.zsh points at $wh, which does not exist"
+    else
+        bad "~/.config/wsl-env.zsh missing (cube/cmonitor aliases will not be set)"
+    fi
+fi
 for kv in init.defaultBranch=main push.autoSetupRemote=true pull.rebase=true rerere.enabled=true merge.conflictStyle=zdiff3; do
     k="${kv%%=*}"; want="${kv#*=}"; got="$(git config --global --get "$k" 2>/dev/null)"
     [ "$got" = "$want" ] && ok "git $k = $got" || bad "git $k = ${got:-unset} (expected $want)"
